@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skeleton Shooting AK-47</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .scene {
+            position: relative;
+            width: 800px;
+            height: 400px;
+        }
+
+        /* Skeleton Body with Recoil */
+        .skeleton {
+            position: absolute;
+            left: 100px;
+            top: 50%;
+            transform: translateY(-50%);
+            animation: recoil 0.1s infinite;
+        }
+
+        /* Skull */
+        .skull {
+            width: 60px;
+            height: 70px;
+            background: #e8e8e8;
+            border-radius: 50% 50% 45% 45%;
+            position: relative;
+            margin-left: 20px;
+        }
+
+        .skull::before {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 20px;
+            background: #000;
+            border-radius: 50%;
+            top: 25px;
+            left: 10px;
+            box-shadow: 25px 0 0 #000;
+        }
+
+        .skull::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 12px;
+            background: #000;
+            top: 45px;
+            left: 26px;
+            border-radius: 0 0 50% 50%;
+        }
+
+        .jaw {
+            width: 50px;
+            height: 20px;
+            background: #e8e8e8;
+            margin-left: 25px;
+            margin-top: -5px;
+            border-radius: 0 0 20px 20px;
+            position: relative;
+        }
+
+        .jaw::before {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 5px;
+            background: #000;
+            top: 5px;
+            left: 5px;
+        }
+
+        /* Spine */
+        .spine {
+            width: 10px;
+            height: 80px;
+            background: repeating-linear-gradient(
+                to bottom,
+                #e8e8e8 0px,
+                #e8e8e8 8px,
+                #000 8px,
+                #000 10px
+            );
+            margin-left: 45px;
+        }
+
+        /* Ribcage */
+        .ribcage {
+            position: absolute;
+            top: 135px;
+            left: 20px;
+        }
+
+        .rib {
+            width: 60px;
+            height: 8px;
+            border: 3px solid #e8e8e8;
+            border-radius: 0 50% 50% 0;
+            margin: 5px 0;
+            background: transparent;
+        }
+
+        /* Arms */
+        .arm-right {
+            position: absolute;
+            top: 100px;
+            left: 60px;
+            transform: rotate(-15deg);
+            transform-origin: left center;
+            z-index: 3;
+        }
+
+        .upper-arm, .forearm {
+            width: 60px;
+            height: 8px;
+            background: #e8e8e8;
+            border-radius: 4px;
+        }
+
+        .forearm {
+            width: 55px;
+            margin-left: 55px;
+            margin-top: -8px;
+            transform: rotate(20deg);
+            transform-origin: left center;
+        }
+
+        .hand {
+            width: 20px;
+            height: 15px;
+            background: #e8e8e8;
+            border-radius: 3px;
+            margin-left: 100px;
+            margin-top: -12px;
+            transform: rotate(10deg);
+        }
+
+        .arm-left {
+            position: absolute;
+            top: 110px;
+            left: 40px;
+            transform: rotate(15deg);
+            z-index: 1;
+        }
+
+        /* Pelvis */
+        .pelvis {
+            width: 50px;
+            height: 30px;
+            border: 5px solid #e8e8e8;
+            border-radius: 0 0 50% 50%;
+            margin-left: 25px;
+            margin-top: 10px;
+            background: transparent;
+        }
+
+        /* Legs */
+        .legs {
+            display: flex;
+            margin-left: 20px;
+            margin-top: 5px;
+        }
+
+        .leg {
+            margin: 0 5px;
+        }
+
+        .femur, .tibia {
+            width: 8px;
+            height: 70px;
+            background: #e8e8e8;
+            border-radius: 4px;
+        }
+
+        .tibia {
+            height: 60px;
+            margin-top: 5px;
+        }
+
+        .foot {
+            width: 25px;
+            height: 8px;
+            background: #e8e8e8;
+            border-radius: 0 5px 5px 0;
+            margin-top: 5px;
+        }
+
+        /* AK-47 attached inside the recoil group */
+        .ak47 {
+            position: absolute;
+            top: 90px;
+            left: 110px;
+            transform: rotate(-5deg);
+            z-index: 2;
+        }
+
+        .ak-body {
+            width: 180px;
+            height: 20px;
+            background: linear-gradient(to bottom, #4a4a4a, #2a2a2a);
+            border-radius: 3px;
+            position: relative;
+        }
+
+        .ak-body::before {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 15px;
+            background: #8B4513;
+            bottom: -5px;
+            left: 30px;
+            border-radius: 0 0 5px 5px;
+        }
+
+        .ak-stock {
+            position: absolute;
+            width: 70px;
+            height: 25px;
+            background: #8B4513;
+            left: -65px;
+            top: -3px;
+            border-radius: 5px 0 0 10px;
+        }
+
+        .ak-barrel {
+            position: absolute;
+            width: 80px;
+            height: 8px;
+            background: #3a3a3a;
+            right: -75px;
+            top: 6px;
+            border-radius: 0 3px 3px 0;
+        }
+
+        .ak-magazine {
+            position: absolute;
+            width: 15px;
+            height: 40px;
+            background: #3a3a3a;
+            bottom: -35px;
+            left: 80px;
+            border-radius: 0 0 5px 5px;
+            transform: skewX(-10deg);
+        }
+
+        .ak-sight {
+            position: absolute;
+            width: 5px;
+            height: 10px;
+            background: #2a2a2a;
+            top: -8px;
+            left: 140px;
+        }
+
+        /* Muzzle Flash */
+        .muzzle-flash {
+            position: absolute;
+            right: -155px;
+            top: -20px;
+            animation: flash 0.1s infinite;
+        }
+
+        .flash-core {
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, #fff 0%, #ffff00 30%, #ff6600 60%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(2px);
+        }
+
+        .flash-spike {
+            position: absolute;
+            width: 100px;
+            height: 20px;
+            background: linear-gradient(to right, #ffff00, #ff6600, transparent);
+            top: 20px;
+            left: 30px;
+            clip-path: polygon(0 50%, 100% 0, 100% 100%);
+        }
+
+        @keyframes flash {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.2) rotate(15deg); }
+        }
+
+        /* Bullet Casings Ejecting from Breach */
+        .casing-container {
+            position: absolute;
+            top: 95px;
+            left: 180px;
+        }
+
+        .casing {
+            position: absolute;
+            width: 6px;
+            height: 12px;
+            background: linear-gradient(to right, #d4af37, #ffd700, #d4af37);
+            border-radius: 1px;
+            animation: eject 0.4s infinite linear;
+        }
+
+        .casing:nth-child(1) { animation-delay: 0s; }
+        .casing:nth-child(2) { animation-delay: 0.12s; }
+        .casing:nth-child(3) { animation-delay: 0.24s; }
+
+        @keyframes eject {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(40px, 80px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Smoke puffs coming from barrel tip */
+        .smoke {
+            position: absolute;
+            right: -80px;
+            top: 0px;
+        }
+
+        .smoke-puff {
+            width: 20px;
+            height: 20px;
+            background: rgba(200, 200, 200, 0.4);
+            border-radius: 50%;
+            position: absolute;
+            animation: smoke-rise 0.8s infinite ease-out;
+            filter: blur(4px);
+        }
+
+        .smoke-puff:nth-child(2) { animation-delay: 0.2s; }
+        .smoke-puff:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes smoke-rise {
+            0% {
+                opacity: 0.6;
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(30px, -40px) scale(2.5);
+            }
+        }
+
+        /* Recoil Base Keyframes */
+        @keyframes recoil {
+            0%, 100% { transform: translateY(-50%) translateX(0); }
+            50% { transform: translateY(-50%) translateX(-6px); }
+        }
+
+        /* Flying Tracers/Bullets */
+        .bullet-container {
+            position: absolute;
+            left: 450px;
+            top: 195px;
+            width: 400px;
+            height: 100px;
+        }
+
+        .bullet {
+            position: absolute;
+            width: 40px;
+            height: 3px;
+            background: linear-gradient(to right, #ffd700, rgba(255,255,255,0));
+            border-radius: 2px;
+            animation: fly 0.25s linear infinite;
+        }
+
+        .bullet:nth-child(1) { top: 0px; animation-delay: 0s; }
+        .bullet:nth-child(2) { top: 12px; animation-delay: 0.08s; }
+        .bullet:nth-child(3) { top: -6px; animation-delay: 0.16s; }
+
+        @keyframes fly {
+            0% { transform: translateX(-100px); opacity: 1; }
+            100% { transform: translateX(400px); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="scene">
+        
+        <div class="skeleton">
+            <div class="skull"></div>
+            <div class="jaw"></div>
+            <div class="spine"></div>
+            <div class="ribcage">
+                <div class="rib"></div>
+                <div class="rib"></div>
+                <div class="rib"></div>
+                <div class="rib"></div>
+            </div>
+            
+            <div class="arm-left">
+                <div class="upper-arm"></div>
+                <div class="forearm"></div>
+                <div class="hand"></div>
+            </div>
+
+            <div class="ak47">
+                <div class="ak-stock"></div>
+                <div class="ak-body"></div>
+                <div class="ak-barrel">
+                    <div class="smoke">
+                        <div class="smoke-puff"></div>
+                        <div class="smoke-puff"></div>
+                        <div class="smoke-puff"></div>
+                    </div>
+                </div>
+                <div class="ak-magazine"></div>
+                <div class="ak-sight"></div>
+                <div class="muzzle-flash">
+                    <div class="flash-core"></div>
+                    <div class="flash-spike"></div>
+                </div>
+            </div>
+
+            <div class="arm-right">
+                <div class="upper-arm"></div>
+                <div class="forearm"></div>
+                <div class="hand"></div>
+            </div>
+
+            <div class="pelvis"></div>
+            <div class="legs">
+                <div class="leg">
+                    <div class="femur"></div>
+                    <div class="tibia"></div>
+                    <div class="foot"></div>
+                </div>
+                <div class="leg">
+                    <div class="femur"></div>
+                    <div class="tibia"></div>
+                    <div class="foot"></div>
+                </div>
+            </div>
+
+            <div class="casing-container">
+                <div class="casing"></div>
+                <div class="casing"></div>
+                <div class="casing"></div>
+            </div>
+        </div>
+
+        <div class="bullet-container">
+            <div class="bullet"></div>
+            <div class="bullet"></div>
+            <div class="bullet"></div>
+        </div>
+
+    </div>
+</body>
+</html>
